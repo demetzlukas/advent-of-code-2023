@@ -1,3 +1,3 @@
-import { main } from './3/index_improved';
+import { main } from './4';
 
 main();
