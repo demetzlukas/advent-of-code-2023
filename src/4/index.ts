@@ -12,12 +12,9 @@ export async function main() {
 
   for (const [_, game] of input) {
     const id = Number(_.split(/\s+/)[1]);
-    const [winningNumbers, myNumbers] = game.split(' | ').map((part) =>
-      part
-        .split(/\s+/)
-        .filter((line) => line !== '')
-        .map(Number)
-    );
+    const [winningNumbers, myNumbers] = game
+      .split(' | ')
+      .map((part) => part.trim().split(/\s+/).map(Number));
 
     const winningCards = intersect(winningNumbers, myNumbers);
     if (winningCards.size > 0) {
