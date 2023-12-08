@@ -24,3 +24,7 @@ export function getAdjacent(
 
   return adjacent;
 }
+
+export function rotate(array: any[][]): any[][] {
+  return array[0].map((_, c) => array.map((_, r) => array[r][c]).reverse());
+}
