@@ -1,3 +1,4 @@
+import { getLCM } from '../utils/math';
 import { readLinesFromInput, getInputFileName } from '../utils/readFile';
 
 type Node = {
@@ -47,21 +48,4 @@ function getSteps(
   }
 
   return steps;
-}
-
-function getLCM(values: number[]): number {
-  let lcm = 1;
-  for (const value of values) {
-    lcm = (value * lcm) / getGCD(value, lcm);
-  }
-
-  return lcm;
-}
-
-function getGCD(a: number, b: number): number {
-  if (!b) {
-    return a;
-  }
-
-  return getGCD(b, a % b);
 }
