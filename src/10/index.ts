@@ -48,6 +48,36 @@ export async function main() {
   }
 
   console.log('Part 1:', cycle.size / 2);
+
+  for (const [x, row] of input.entries()) {
+    for (const [y] of row.entries()) {
+      if (!cycle.has(getKey(x, y))) {
+        input[x][y] = '.';
+      }
+    }
+  }
+
+  let inside = 0;
+
+  for (const [x, row] of input.entries()) {
+    for (const [y, char] of row.entries()) {
+      if (char !== '.') {
+        continue;
+      }
+      let pipes = 0;
+      for (let i = y + 1; i < row.length; i++) {
+        if ('|JL'.includes(input[x][i])) {
+          pipes++;
+        }
+      }
+      if (pipes % 2 === 1) {
+        inside++;
+      }
+    }
+  }
+
+  // not submitted as idea was taken from reddit
+  console.log('Part 2:', inside);
 }
 
 function getStartPosition(input: string[][]): [number, number] {
