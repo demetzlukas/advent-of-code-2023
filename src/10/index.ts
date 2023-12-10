@@ -1,4 +1,3 @@
-import { getAdjacent } from '../utils/arrays';
 import { readLinesFromInput, getInputFileName } from '../utils/readFile';
 
 const pipes = {
@@ -34,18 +33,21 @@ export async function main() {
   );
 
   let [x, y] = getStartPosition(input);
+  let cycle: Set<string> = null;
 
   for (const type in pipes) {
     const pipe = pipes[type];
-    let direction = Object.keys(pipe)[0];
-
     input[x][y] = type;
-    const cycle = getCycle(x, y, direction, input);
-    if (cycle !== null) {
-      console.log('Part 1:', cycle.size / 2);
+    const cycles = Object.keys(pipe)
+      .map((direction) => getCycle(x, y, direction, input))
+      .filter((cycle) => cycle !== null);
+    if (cycles.length === 2) {
+      cycle = cycles[0];
       break;
     }
   }
+
+  console.log('Part 1:', cycle.size / 2);
 }
 
 function getStartPosition(input: string[][]): [number, number] {
