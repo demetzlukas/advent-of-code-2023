@@ -1,0 +1,101 @@
+import { getAdjacent } from '../utils/arrays';
+import { readLinesFromInput, getInputFileName } from '../utils/readFile';
+
+const pipes = {
+  '|': {
+    N: 'N',
+    S: 'S',
+  },
+  '-': {
+    E: 'E',
+    W: 'W',
+  },
+  L: {
+    S: 'E',
+    W: 'N',
+  },
+  J: {
+    S: 'W',
+    E: 'N',
+  },
+  '7': {
+    N: 'W',
+    E: 'S',
+  },
+  F: {
+    N: 'E',
+    W: 'S',
+  },
+};
+
+export async function main() {
+  const input = (await readLinesFromInput(getInputFileName(__dirname))).map(
+    (line) => line.split('')
+  );
+
+  let [x, y] = getStartPosition(input);
+
+  for (const type in pipes) {
+    const pipe = pipes[type];
+    let direction = Object.keys(pipe)[0];
+
+    input[x][y] = type;
+    const cycle = getCycle(x, y, direction, input);
+    if (cycle !== null) {
+      console.log('Part 1:', cycle.size / 2);
+      break;
+    }
+  }
+}
+
+function getStartPosition(input: string[][]): [number, number] {
+  for (const [x, line] of input.entries()) {
+    for (const [y, char] of line.entries()) {
+      if (char === 'S') {
+        return [x, y];
+      }
+    }
+  }
+
+  throw new Error('No starting position');
+}
+
+function getKey(x: number, y: number): string {
+  return `${x}x${y}`;
+}
+
+function getNext(direction: string): [number, number] {
+  const directions = {
+    N: [-1, 0],
+    S: [1, 0],
+    E: [0, 1],
+    W: [0, -1],
+  };
+
+  return directions[direction];
+}
+
+function getCycle(
+  x: number,
+  y: number,
+  direction: string,
+  input: string[][]
+): Set<string> {
+  const seenTiles = new Set<string>();
+  while (!seenTiles.has(getKey(x, y))) {
+    seenTiles.add(getKey(x, y));
+    if (input[x][y] === '.') {
+      return null;
+    }
+    const pipe = pipes[input[x][y]];
+    if (!pipe || !Object.keys(pipe).includes(direction)) {
+      return null;
+    }
+    direction = pipe[direction];
+    const [nextX, nextY] = getNext(direction);
+    x += nextX;
+    y += nextY;
+  }
+
+  return seenTiles;
+}
